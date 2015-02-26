@@ -1,6 +1,41 @@
 #!/bin/bash
 
+##########################################################################
+# (c) 2014 Yann BOGDANOVIC <ianbogda@gmail.com>
+# All rights reserved
+#
+# This program is free software : you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# The GNU General Public License can be found at
+# http://www.gnu.org/copyleft/gpl.html.
+#
+# This script is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+##########################################################################
+
 # create new bootstrap them for bootstrap_package
+# Check for dependencies
+function checkDependency() {
+	if ! hash $1 2>&-;
+	then
+		echo "Failed!"
+		echo "This script requires '$1' but it can not be found. Aborting."
+		exit 1
+	fi
+}
+
+echo -n "Checking dependencies..."
+checkDependency "sed"
+checkDependency "git"
+checkDependency "rm"
+checkDependency "goog-webfont-dl"
+echo "Succeeded."
+
 
 # Quelques variables
 DEPOT_GIT=https://github.com/cdg46
@@ -50,15 +85,17 @@ WEBFONTS=(${GOOG_WEBFONT//,/ })
 for WEBFONT in "${WEBFONTS[@]}"; do
 	goog-webfont-dl -a -f "$WEBFONT"
 	cat "$WEBFONT.css" >> Resources/Private/Less/Theme/webfont.less
-	mv "$WEBFONT"/* Resources/Public/Fonts/
+	mv "$WEBFONT/*" Resources/Public/Fonts/
 	rm -rf "$WEBFONT"
 done
 # sed url src
 sed -i 's/\.\.\/fonts/@{icon-font-path}/g' Resources/Private/Less/Theme/webfont.less
 
-
+echo `pwd`
+exit 0
 git add .
 git commit -m "Initial commit"
+rm -rf .git
 git remote add origin $URL
 git push origin master
 
