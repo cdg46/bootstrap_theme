@@ -65,7 +65,8 @@ sed -i 's/__DESCRIPTION__/Bootstrap $THEME pour bootstrap_package/g' ext_emconf.
 sed -i 's/__AUTEUR__/$AUTEUR/g' ext_emconf.php
 sed -i 's/__EMAIL__/$EMAIL/g' ext_emconf.php
 
-sed -i 's/__TITLE__/$THEME/g' ext_tables.php
+# backendLayouts
+sed -i 's/__TITLE__/$THEME/g' Configuration/PageTS/Mod/web_layout.txt
 
 # transformation du fichier variables.less en constants.txt
 CONSTANTS=$CONF/constants.txt
